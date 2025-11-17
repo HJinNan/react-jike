@@ -1,0 +1,29 @@
+.login {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: center/cover url('~@/assets/login.png'); 
+}
+
+.login-logo {
+  width: 100px;
+  // height: 60px;
+  display: block;
+  margin: 0 auto 20px; /* 上下外边距：0  auto（水平居中） 底部20px */
+}
+
+.login-container {
+  width: 440px;
+  height: 360px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%); /* 修正中文逗号为英文逗号 */
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.1); /* 修正rgb格式为rgba，补充透明度逗号 */
+}
+
+.login-checkbox-label {
+  color: #1890ff; /* antd的主题蓝色，符合设计规范 */
+}
