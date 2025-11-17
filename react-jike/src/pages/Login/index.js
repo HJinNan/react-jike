@@ -9,9 +9,13 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const onFinish =async (val) => {
-    await dispatch(fetchLogin(val)) ;
-    navigate('/');
-    message.success('登录成功');
+    try {
+      await dispatch(fetchLogin(val));
+      navigate('/');
+      message.success('登录成功');
+    } catch (error) {
+      message.error(error.message);
+    }
   };
 
 

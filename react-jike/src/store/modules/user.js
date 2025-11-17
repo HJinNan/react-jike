@@ -9,6 +9,7 @@ const userStore = createSlice({
     // state 初始值
     initialState: {
         token: getToken() || '',
+        userInfo: {}
     },
     // 同步更新 state 的方法
     reducers: {
@@ -16,11 +17,14 @@ const userStore = createSlice({
             state.token = action.payload;
             _setToken(action.payload);
         },
+        setUserInfo: (state, action) => {
+            state.userInfo = action.payload;
+        }
     }
 })
 
 // 结构出 actionCreators函数
-const { setToken } = userStore.actions;
+const { setToken, setUserInfo } = userStore.actions;
 
 // 解构出 reducer 函数
 const userReducer = userStore.reducer;
@@ -32,5 +36,12 @@ const fetchLogin = (loginForm) => {
     }
 }
 
-export { fetchLogin, setToken };
+const fetchUserInfo = () => {
+    return async(dispatch) => {
+        const res = await request.get('/user/profile');
+        dispatch(setUserInfo(res.data.data));
+    }
+}
+
+export { fetchLogin, fetchUserInfo, setToken, setUserInfo };
 export default userReducer;
