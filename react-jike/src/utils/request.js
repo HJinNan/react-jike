@@ -5,7 +5,7 @@ import { removeToken } from './token';
 
 const request = axios.create({
     baseURL: 'http://geek.itheima.net/v1_0',
-    timeout: 5000,
+    timeout: 15000,
 })
 
 request.interceptors.request.use(
@@ -27,7 +27,6 @@ request.interceptors.response.use(
         return response;
     },
     (error) => {
-        console.dir(error);
         if(error.response?.status === 401) {
             message.error('登录过期，请重新登录');
             removeToken();
