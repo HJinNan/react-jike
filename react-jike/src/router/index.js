@@ -1,6 +1,7 @@
 import Login from "@/pages/Login";
 import Layout from "@/pages/Layout";
 import { createBrowserRouter as Router} from "react-router-dom";
+import { AuthRoute } from "@/components/AuthRoute";
 
 const router = Router([
     {
@@ -8,7 +9,7 @@ const router = Router([
         mete:{
             tile: "layou"
         },
-        element: <Layout />
+        element: <AuthRoute><Layout /></AuthRoute>
     },
     {
         path: "/login",

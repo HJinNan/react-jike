@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { getToken } from './token';
+
 
 
 const request = axios.create({
@@ -8,7 +10,10 @@ const request = axios.create({
 
 request.interceptors.request.use(
     (config) => {
-        console.log(config, '=== 请求拦截器 ===');
+        const token = getToken();
+        if(token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
         
         return config;
     },
