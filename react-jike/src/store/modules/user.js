@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { request } from '@/utils/request';
-import { setToken as _setToken, getToken } from '@/utils/token';
+import { setToken as _setToken, getToken, removeToken } from '@/utils/token';
 
 
 
@@ -19,29 +19,42 @@ const userStore = createSlice({
         },
         setUserInfo: (state, action) => {
             state.userInfo = action.payload;
+        },
+        clearUserInfo: (state) => {
+            state.token = '';
+            state.userInfo = {};
+            removeToken();
         }
     }
 })
 
 // 结构出 actionCreators函数
-const { setToken, setUserInfo } = userStore.actions;
+const { setToken, setUserInfo, clearUserInfo } = userStore.actions;
 
 // 解构出 reducer 函数
 const userReducer = userStore.reducer;
 
 const fetchLogin = (loginForm) => {
     return async(dispatch) => {
-        const res = await request.post('/authorizations', loginForm);
-        dispatch(setToken(res.data.data.token));
+        try {
+            const res = await request.post('/authorizations', loginForm);
+            dispatch(setToken(res.data.data.token));
+        } catch (error) {
+            console.log(error);
+        }
     }
 }
 
 const fetchUserInfo = () => {
     return async(dispatch) => {
-        const res = await request.get('/user/profile');
-        dispatch(setUserInfo(res.data.data));
+        try {
+            const res = await request.get('/user/profile');
+            dispatch(setUserInfo(res.data.data));
+        } catch (error) {
+            console.log(error);
+        }
     }
 }
 
-export { fetchLogin, fetchUserInfo, setToken, setUserInfo };
+export { fetchLogin, fetchUserInfo, clearUserInfo };
 export default userReducer;

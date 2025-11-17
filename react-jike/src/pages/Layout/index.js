@@ -9,7 +9,7 @@ import './index.scss';  // 补充分号
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchUserInfo } from '@/store/modules/user';
+import { fetchUserInfo, clearUserInfo } from '@/store/modules/user';
 
 const { Header, Sider } = Layout;  // 修正等号前后空格
 
@@ -55,9 +55,9 @@ const GeekLayout = () => {
     }
   }
 
-  const handleLogout = (e) => {
-    localStorage.removeItem("token");
-    navigate("/login",{replace:true});
+  const handleLogout = () => {
+    dispatch(clearUserInfo());
+    navigate('/login',{replace:true});
   }
 
   useEffect(() => {
