@@ -18,6 +18,8 @@ import { useState, useEffect } from 'react';
 import {createArticle} from '@/apis/article';
 import { PlusOutlined } from '@ant-design/icons';
 import { useChannel } from '@/hooks/useChannel';
+import { getArticleDetail, updateArticle } from '@/apis/article';
+import { useSearchParams } from 'react-router-dom';
 
 
 
@@ -41,17 +43,25 @@ const Publish = () => {
       content,
       cover: {
         type: imageType,
-        images: imageList.map(item => item.response.data.url),
+        images: imageList.map(item => {
+          if(item.response){
+            return item.response.data.url;
+          }else{
+            return item.url;
+          }
+        }),
       },
       channel_id,
     }
-    createArticle(reqData)
-      .then(res => {
+    if(articleId){
+      updateArticle({reqData, id: articleId}).then(res => {
+        message.success('文章更新成功！');
+      })
+    }else{
+      createArticle(reqData).then(res => {
         message.success('文章发布成功！');
       })
-      .catch(err => {
-        message.error('文章发布失败，请重试');
-      });
+    }
   }
 
   const onChangeUpload = (info) => {
@@ -69,13 +79,31 @@ const Publish = () => {
     setImageType(value);
   }
 
+  const [searchParams] = useSearchParams();
+  const articleId = searchParams.get('id');
+  const [form] = Form.useForm();
+  useEffect(() => {
+      async function getArticleDetailFun(){
+        const res = await getArticleDetail(articleId);
+        const data = res.data
+        console.log(res, 80);
+        form.setFieldsValue({
+          ...data,
+          type: data.cover.type,
+        });
+        setImageType(data.cover.type);
+        setImageList(data.cover.images.map(url => ({ url })));
+      }
+      if(articleId)getArticleDetailFun();
+  },[articleId, form])
+
   return (
     <div className="publish">
       <Card
         title={
           <Breadcrumb items={[
             { title: <Link to={'/'}>首页</Link> },
-            { title: '发布文章' }
+            { title: articleId ? '编辑文章' : '发布文章' }
           ]} />
         }
       >
@@ -84,6 +112,7 @@ const Publish = () => {
           wrapperCol={{ span: 16 }} // 修正语法错误（f 改为 {）
           initialValues={{ type: 0 }}
           onFinish={onFinish}
+          form={form}
         >
           <Form.Item
             label="标题"
@@ -124,6 +153,7 @@ const Publish = () => {
                   name='image'
                   onChange={onChangeUpload}
                   maxCount={imageType}
+                  fileList={imageList}
                 >
                   <div style={{ marginTop: 8 }}>
                     <PlusOutlined />
@@ -149,7 +179,7 @@ const Publish = () => {
           <Form.Item wrapperCol={{ offset: 4 }}>
             <Space>
               <Button size="large" type="primary" htmlType="submit">
-                发布文章
+                {articleId ? '更新文章' : '发布文章'}
               </Button>
             </Space>
           </Form.Item>

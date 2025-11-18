@@ -2,9 +2,15 @@ import Login from "@/pages/Login";
 import Layout from "@/pages/Layout";
 import { createBrowserRouter as Router} from "react-router-dom";
 import { AuthRoute } from "@/components/AuthRoute";
-import Home from "@/pages/Home";
-import Article from "@/pages/Article";
-import Publish from "@/pages/Publish";
+// import Home from "@/pages/Home";
+// import Article from "@/pages/Article";
+// import Publish from "@/pages/Publish";
+import {Suspense} from "react";
+
+import {lazy} from "react";
+const Home = lazy(() => import("@/pages/Home"));
+const Article = lazy(() => import("@/pages/Article"));
+const Publish = lazy(() => import("@/pages/Publish"));
 
 const router = Router([
     {
@@ -16,15 +22,15 @@ const router = Router([
         children: [
             {
                 path: "home",
-                element: <Home />
+                element: <Suspense fallback={<div>loading</div>}><Home /></Suspense>
             },
             {
                 path: "article",
-                element: <Article />
+                element: <Suspense fallback={<div>loading</div>}><Article /></Suspense>
             },
             {
-                path: "publish",
-                element: <Publish />
+                path: "publish/:id?",
+                element: <Suspense fallback={<div>loading</div>}><Publish /></Suspense> 
             }
         ]
     },

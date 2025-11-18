@@ -29,3 +29,18 @@ export function deleteArticle(id) {
     method: 'delete'
   })
 }
+
+export function getArticleDetail(id) {
+  return request({
+    url: `/mp/articles/${id}`,
+    method: 'get'
+  })
+}
+
+export function updateArticle(data) {
+  return request({
+    url: `/mo/articles/${data.id}?draft=false`,
+    method: 'put',
+    data
+  })
+}

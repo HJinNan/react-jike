@@ -80,51 +80,6 @@ const Article = () => {
       }
     }
   ]
- const data = [
-  {
-    id: 'art-001',
-    title: 'Vue3 + Vite 项目性能优化与最佳实践',
-    status: 1, // 待审核
-    pubdate: '2023-11-10 10:25:30',
-    read_count: 892,
-    comment_count: 23,
-    like_count: 67,
-    cover: {
-      type: 1, // 单图
-      images: ['https://picsum.photos/id/26/400/300']
-    }
-  },
-  {
-    id: 'art-002',
-    title: 'Node.js 后端接口设计与安全防护',
-    status: 2, // 审核通过
-    pubdate: '2023-11-05 16:40:15',
-    read_count: 1532,
-    comment_count: 58,
-    like_count: 142,
-    cover: {
-      type: 3, // 三图
-      images: [
-        'https://picsum.photos/id/42/400/300',
-        'https://picsum.photos/id/43/400/300',
-        'https://picsum.photos/id/44/400/300'
-      ]
-    }
-  },
-  {
-    id: 'art-003',
-    title: 'TypeScript 类型系统进阶：泛型与条件类型',
-    status: 1, // 待审核
-    pubdate: '2023-11-01 09:12:08',
-    read_count: 645,
-    comment_count: 17,
-    like_count: 39,
-    cover: {
-      type: 0, // 无图
-      images: []
-    }
-  }
-];
   const [count,setCount] = useState(0);
   const { channelList } = useChannel();
   const [list,setList] = useState([]);
