@@ -6,15 +6,18 @@ import {
   Input, 
   Select, 
   Space, 
-  message
+  message,
+  Radio,
+  Upload
 } from 'antd';
 import { Link } from 'react-router-dom';
 import './index.scss';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { useState, useEffect } from 'react';
-import { getChannelList } from '@/apis/article';
 import {createArticle} from '@/apis/article';
+import { PlusOutlined } from '@ant-design/icons';
+import { useChannel } from '@/hooks/useChannel';
 
 
 
@@ -22,17 +25,23 @@ import {createArticle} from '@/apis/article';
 const { Option } = Select;
 
 const Publish = () => {
-  const [channelList, setChannelList] = useState([]);
+  const { channelList } = useChannel();
+  const [imageList, setImageList] = useState([]);
+  const [imageType, setImageType] = useState(0);
 
   const onFinish = (formValues) => {
-    console.log(formValues);
+    console.log(imageList.length,imageType,33);
+    if(imageType> 0 && imageList.length !== imageType){
+      message.warning(`请上传${imageType}张图片`);
+      return;
+    }
     const { title, content, channel_id } = formValues;
     const reqData ={
       title,
       content,
       cover: {
-        type: 0,
-        images: []
+        type: imageType,
+        images: imageList.map(item => item.response.data.url),
       },
       channel_id,
     }
@@ -45,11 +54,20 @@ const Publish = () => {
       });
   }
 
-  useEffect(() => {
-    getChannelList().then(res => {
-      setChannelList(res.data.data.channels);
-    })
-  }, []);
+  const onChangeUpload = (info) => {
+    console.log('正在上传中',info);
+    const { fileList } = info;
+    if(imageType === 0){
+      setImageList([]);
+      return;
+    }
+    setImageList(fileList);
+  }
+
+  const onChangeType = (e) => {
+    const { value } = e.target;
+    setImageType(value);
+  }
 
   return (
     <div className="publish">
@@ -64,7 +82,7 @@ const Publish = () => {
         <Form
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 16 }} // 修正语法错误（f 改为 {）
-          initialValues={{ type: 1 }}
+          initialValues={{ type: 0 }}
           onFinish={onFinish}
         >
           <Form.Item
@@ -87,6 +105,32 @@ const Publish = () => {
                 ))
               }
             </Select>
+          </Form.Item>
+
+          <Form.Item label="封面">
+          <Form.Item name="type">
+            <Radio.Group onChange={onChangeType}>
+              <Radio value={1}>单图</Radio>
+              <Radio value={3}>三图</Radio>
+              <Radio value={0}>无图</Radio>
+            </Radio.Group>
+          </Form.Item>
+            {
+              imageType > 0 && (
+                <Upload
+                  listType="picture-card"
+                  showUploadList
+                  action={'http://geek.itheima.net/v1_0/upload'}
+                  name='image'
+                  onChange={onChangeUpload}
+                  maxCount={imageType}
+                >
+                  <div style={{ marginTop: 8 }}>
+                    <PlusOutlined />
+                  </div>
+                </Upload>
+              )
+            }
           </Form.Item>
 
           <Form.Item

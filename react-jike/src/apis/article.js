@@ -14,3 +14,18 @@ export function createArticle(data) {
     data
   })
 }
+
+export function getArticleList(params) {
+  return request({
+    url: '/mp/articles',
+    method: 'get',
+    params
+  })
+}
+
+export function deleteArticle(id) {
+  return request({
+    url: `/mp/articles/${id}`,
+    method: 'delete'
+  })
+}

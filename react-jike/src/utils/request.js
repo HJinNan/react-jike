@@ -5,7 +5,7 @@ import { removeToken } from './token';
 
 const request = axios.create({
     baseURL: 'http://geek.itheima.net/v1_0',
-    timeout: 15000,
+    timeout: 5000,
 })
 
 request.interceptors.request.use(
